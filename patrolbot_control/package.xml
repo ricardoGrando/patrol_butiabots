@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <name>patrolbot_control</name>
+  <version>0.0.1</version>
+  <description>
+    The patrolbot_control package. This is in experimental mode.
+  </description>
+  
+  <maintainer email="ricardogrando13@gmail.com">Ricardo Grando</maintainer>
+  <license>GPLv3</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>controller_manager</build_depend>
+  <run_depend>controller_manager</run_depend>
+</package>

@@ -1,0 +1,404 @@
+<?xml version="1.0"?>
+
+<robot name="patrolbot" 
+	xmlns:xacro="http://ros.org/wiki/xacro">
+	<!-- import all gazebo-customization elements, including gazebo colors -->
+	<xacro:include filename="$(find patrolbot_description)/urdf/patrolbot.gazebo" />
+	<!-- import the patrolbot's wheels -->
+	<xacro:include filename="$(find patrolbot_description)/urdf/patrolbot_wheel.xacro" />
+	<!-- import the sick -->
+	<xacro:include filename="$(find patrolbot_description)/urdf/sick_lms1xx.urdf.xacro" />
+	<!-- chassis -->
+	<link name="base_link">
+		<inertial>
+			<mass value="40" />
+			<!--<origin xyz="-0.025 0 -0.223"/> -->
+			<origin xyz="-0.0 0 0" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+		<visual>
+			<origin xyz="0.27 0 0.17" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/patrolbot.stl" />
+			</geometry>
+			<!-- <material name="center_hubcap"></material> -->
+		</visual>
+		<collision>
+			<origin xyz="-0.0 0 0.20" rpy="0 0 0" />
+			<geometry>
+				<box size="0.45 0.48 0.30" />
+			</geometry>
+			<!-- <origin xyz="0.27 0 0.17" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/patrolbot.stl" />
+			</geometry> -->
+		</collision>
+	</link>
+
+
+	<!-- top_plate -->
+	<link name="top_plate">
+		<inertial>
+			<mass value="0.01" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="top_geom">
+				<mesh filename="package://patrolbot_description/meshes/top.stl" 
+				scale="1.25 1.25 1.25" />
+			</geometry>
+			<material name="TopBlack"></material>
+		</visual>
+		<collision>
+			<!-- <origin xyz="0.0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<box size="0.45 0.38 0.01" />
+			</geometry> -->
+			<geometry name="top_geom">
+				<mesh filename="package://patrolbot_description/meshes/top.stl" 
+				scale="1.25 1.25 1.25" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="base_top_joint" type="fixed">
+		<origin xyz="-0.0 0 0.38" rpy="0 0 0" />
+		<parent link="base_link" />
+		<child link="top_plate" />
+	</joint>
+
+
+	<!-- swivel -->
+	<link name="swivel">
+		<inertial>
+			<mass value="0.1" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/swivel.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="base_swivel_joint" type="fixed">
+		<origin xyz="0.195 0 0.055" rpy="0 0 0" />
+		<axis xyz="0 0 1" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="base_link" />
+		<child link="swivel" />
+	</joint>
+	<!-- center_hubcap -->
+	<link name="center_hubcap">
+		<inertial>
+			<mass value="0.01" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_hubcap.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="swivel_hubcap_joint" type="fixed">
+		<origin xyz="-0.026 0 -0.016" rpy="0 0 0" />
+		<axis xyz="0 1 0" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="swivel" />
+		<child link="center_wheel" />
+	</joint>
+	<!-- center_wheel -->
+	<link name="center_wheel">
+		<inertial>
+			<mass value="1.0" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_wheel.stl" />
+			</geometry>
+			<material name="WheelBlack"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0" />
+			<geometry>
+				<cylinder radius="0.0375" length="0.01" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="center_wheel_joint" type="fixed">
+		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
+		<parent link="center_wheel"/>
+		<child link="center_hubcap"/>
+	</joint>
+
+
+
+
+	<link name="swivel_left">
+		<inertial>
+			<mass value="0.1" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/swivel.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="base_swivel_joint_left" type="fixed">
+		<origin xyz="-0.165 -0.165 0.055" rpy="0 0 0" />
+		<axis xyz="0 0 1" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="base_link" />
+		<child link="swivel_left" />
+	</joint>
+	<link name="left_hubcap">
+		<inertial>
+			<mass value="0.01" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_hubcap.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="swivel_left_hubcap_joint" type="fixed">
+		<origin xyz="-0.026 0 -0.016" rpy="0 0 0" />
+		<axis xyz="0 1 0" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="swivel_left" />
+		<child link="left_swivel_wheel" />
+	</joint>
+	<!-- left_swivel_wheel -->
+	<link name="left_swivel_wheel">
+		<inertial>
+			<mass value="1.0" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_wheel.stl" />
+			</geometry>
+			<material name="WheelBlack"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0" />
+			<geometry>
+				<cylinder radius="0.0375" length="0.01" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="left_swivel_wheel_joint" type="fixed">
+		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
+		<parent link="left_swivel_wheel"/>
+		<child link="left_hubcap"/>
+	</joint>
+
+
+
+
+	<link name="swivel_right">
+		<inertial>
+			<mass value="0.1" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/swivel.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="base_swivel_joint_right" type="fixed">
+		<origin xyz="-0.165 0.165 0.055" rpy="0 0 0" />
+		<axis xyz="0 0 1" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="base_link" />
+		<child link="swivel_right" />
+	</joint>
+	<link name="right_hubcap">
+		<inertial>
+			<mass value="0.01" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_hubcap.stl" />
+			</geometry>
+			<material name="swivel"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="swivel_right_hubcap_joint" type="fixed">
+		<origin xyz="-0.026 0 -0.016" rpy="0 0 0" />
+		<axis xyz="0 1 0" />
+		<anchor xyz="0 0 0" />
+		<limit effort="100" velocity="100" k_velocity="0" />
+		<joint_properties damping="0.0" friction="0.0" />
+		<parent link="swivel_right" />
+		<child link="right_swivel_wheel" />
+	</joint>
+
+	<!-- center_wheel -->
+	<link name="right_swivel_wheel">
+		<inertial>
+			<mass value="1.0" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/center_wheel.stl" />
+			</geometry>
+			<material name="WheelBlack"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0" />
+			<geometry>
+				<cylinder radius="0.0375" length="0.01" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="right_swivel_wheel_joint" type="fixed">
+		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
+		<parent link="right_swivel_wheel"/>
+		<child link="right_hubcap"/>
+	</joint>
+
+	<xacro:patrolbot_wheel suffix="left" parent="base_link" reflect="-1"/>
+	<xacro:patrolbot_wheel suffix="right" parent="base_link" reflect="1"/>
+
+	<!-- front_sonar -->
+	<!-- <link name="front_sonar">
+		<inertial>
+			<mass value="0.0001" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry name="patrolbot_geom">
+				<mesh filename="package://patrolbot_description/meshes/front_sonar.stl" />
+			</geometry>
+			<material name="SonarYellow"></material>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<box size="0.00001 0.00001 0.00001" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="base_front_joint" type="fixed">
+		<origin rpy="0 0 0" xyz="0.109 0 0.209" />
+		<parent link="base_link" />
+		<child link="front_sonar" />
+	</joint> -->
+
+
+	<link name="hokuyo">
+		<inertial>
+			<mass value="1e-5" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<mesh filename="package://patrolbot_description/meshes/hokuyo.dae" />
+			</geometry>
+		</visual>
+		<collision>
+			<!-- <origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.1 0.1 0.1" />
+			</geometry> -->
+			<geometry>
+				<mesh filename="package://patrolbot_description/meshes/hokuyo.dae" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="hokuyo_joint" type="fixed">
+		<axis xyz="0 1 0" />
+		<origin xyz="0.31 0 0.10" rpy="0 0 0" />
+		<parent link="base_link" />
+		<child link="hokuyo" />
+	</joint>
+
+	<xacro:sick_lms1xx frame="sick"/>
+
+	<joint name="test_joint" type="fixed">
+		<origin xyz="0.15 0 0.5" rpy="0 0 0"/>
+		<parent link="base_link"/>
+		<child link="sick"/>
+	</joint>
+
+</robot>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>patrolbot_gazebo</name>
+  <version>0.1.0</version>
+  <description>
+    The patrolbot_gazebo package. This is a first working version.
+  </description>
+  
+  <maintainer email="ricardogrando13@gmail.com">Ricardo Grando</maintainer>
+  <license>GPLv3</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>patrolbot_control</build_depend>
+  <build_depend>patrolbot_description</build_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>patrolbot_control</run_depend>
+  <run_depend>patrolbot_description</run_depend>
+</package>
